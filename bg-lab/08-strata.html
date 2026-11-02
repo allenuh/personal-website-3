@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>08 · strata</title>
+  <link rel="stylesheet" href="shared/base.css">
+</head>
+<body>
+  <canvas class="bg" aria-hidden="true"></canvas>
+
+  <script type="module">
+    // Four Perlin fbm layers, each at its own scale, sliding its own direction and speed
+    // (parallax), each warped by the layer beneath it, composited like paint:
+    // wine haze -> magenta smoke -> pink wisps (screen) -> plum shadow (multiply).
+    import { runLayered } from './shared/layered.js';
+    import { NOISE, PERLIN, SWATCHES, PALETTE, fbmFn } from './shared/glsl.js';
+
+    const frag = /* glsl */ `
+      precision highp float;
+      uniform vec2 u_res;
+      uniform float u_time;
+      uniform vec2 u_mouse;
+      ${NOISE}
+      ${PERLIN}
+      ${SWATCHES}
+      ${PALETTE}
+      ${fbmFn('layerFbm', { octaves: 6, lacunarity: 2.03, gain: 0.52 })}
+
+      void main() {
+        vec2 uv = gl_FragCoord.xy / u_res;
+        vec2 p = (gl_FragCoord.xy - 0.5 * u_res) / u_res.y;
+        vec2 m = (u_mouse - 0.5);
+        float t = u_time;
+
+        vec3 col = mix(INK, PLUM * 0.7, smoothstep(-0.6, 0.8, p.y - p.x * 0.3));
+
+        // 1. wide wine haze, barely moving
+        float a = layerFbm(p * 1.1 + vec2(t * 0.012, 0.0) + m * 0.05);
+        col = mix(col, WINE, smoothstep(0.35, 0.72, a));
+
+        // 2. magenta smoke, drifting left, warped by 1
+        float b = layerFbm(p * 1.9 + vec2(-t * 0.028, t * 0.01) + a * 1.4 + m * 0.1);
+        col = mix(col, MAG, smoothstep(0.4, 0.75, b) * 0.9);
+
+        // 3. pink wisps, finer and quicker, warped by 2
+        float c = layerFbm(p * 3.4 + vec2(t * 0.045, -t * 0.018) + b * 1.8 + m * 0.18);
+        col = screen(col, PINK * pow(smoothstep(0.45, 0.85, c), 2.0) * 0.75);
+
+        // 4. plum shadow passing over everything
+        float d = layerFbm(p * 0.75 - vec2(t * 0.009, t * 0.011));
+        col *= mix(vec3(1.0), PLUM * 1.6, smoothstep(0.48, 0.75, d) * 0.6);
+
+        gl_FragColor = vec4(col, 1.0);
+      }
+    `;
+
+    runLayered(document.querySelector('canvas'), frag);
+  </script>
+  <script type="module" src="shared/nav.js"></script>
+</body>
+</html>

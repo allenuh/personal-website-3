@@ -1,0 +1,202 @@
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap");
+
+:root {
+  color-scheme: dark;
+  --ink: #ffe6f2;
+  --muted: rgba(255, 214, 234, 0.66);
+  --faint: rgba(255, 214, 234, 0.4);
+  --line: rgba(255, 170, 210, 0.2);
+  --accent: #ff6cb5;
+  --panel: rgba(16, 0, 9, 0.5);
+  --sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --serif: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  /* keep content well clear of the screen edges */
+  --edge: clamp(16px, 6vmin, 88px);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: #200008;
+  color: var(--ink);
+  font: 14px/1.55 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  overflow: hidden;
+}
+
+.bg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+}
+
+.stage {
+  position: fixed;
+  inset: 0;
+  padding: var(--edge);
+  display: grid;
+  place-items: center;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--faint);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--accent);
+  text-decoration-color: currentColor;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 3px;
+}
+
+p,
+ul,
+ol,
+h1,
+h2 {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* shared section markup (render.js); each layout restyles as needed */
+.about p + p {
+  margin-top: 0.8em;
+}
+
+.about-meta {
+  margin-top: 1.2em;
+  color: var(--faint);
+  font: 12px/1.5 var(--mono);
+}
+
+.xp {
+  display: grid;
+  gap: 18px;
+}
+
+.xp-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 8px;
+}
+
+.xp-org {
+  color: var(--muted);
+}
+
+.xp-when {
+  margin-left: auto;
+  color: var(--faint);
+  font: 12px var(--mono);
+  white-space: nowrap;
+}
+
+.xp-what,
+.proj-what {
+  margin-top: 4px;
+  color: var(--muted);
+}
+
+.proj {
+  display: grid;
+  gap: 16px;
+}
+
+.proj-name {
+  text-decoration: none;
+}
+
+.proj-name span {
+  color: var(--faint);
+  font-size: 0.85em;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.tags li {
+  font: 11px/1 var(--mono);
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 8px;
+}
+
+.contact {
+  display: grid;
+  gap: 10px;
+}
+
+.contact li {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+}
+
+.contact-label {
+  color: var(--faint);
+  font: 12px/1.9 var(--mono);
+}
+
+/* layouts-lab switcher */
+.layout-nav {
+  position: fixed;
+  left: 50%;
+  bottom: 12px;
+  translate: -50% 0;
+  display: flex;
+  gap: 12px;
+  font: 11px/1 var(--mono);
+  color: var(--faint);
+  z-index: 20;
+}
+
+.layout-nav a {
+  text-decoration: none;
+}
+
+@media (max-width: 640px) {
+  body {
+    font-size: 13px;
+  }
+}

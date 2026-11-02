@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Background lab</title>
+  <style>
+    :root { color-scheme: dark; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #14000a;
+      color: #ffd6ea;
+      font: 13px/1.5 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+      padding: 24px 16px;
+      box-sizing: border-box;
+    }
+    h1 { font-size: 13px; font-weight: 400; margin: 0 0 16px; opacity: .7; }
+    h2 { font-size: 13px; font-weight: 400; margin: 28px 0 12px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+      gap: 16px;
+    }
+    a { color: inherit; text-decoration: none; display: block; }
+    a:hover span { text-decoration: underline; }
+    iframe {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      border: 0;
+      border-radius: 6px;
+      pointer-events: none;
+      display: block;
+      margin-bottom: 6px;
+      background: #3a0420;
+    }
+  </style>
+</head>
+<body>
+  <h1>loveless backgrounds &mdash; click to open full screen, then &larr; &rarr; to flip, p post-processing panel, g grain, h hide nav</h1>
+  <h2>round 3 &mdash; offshoots of 06 and 07, with post-processing</h2>
+  <div class="grid">
+    <a href="06b-ember.html"><iframe src="06b-ember.html" tabindex="-1"></iframe><span>06b ember</span> &mdash; islands, peaks capped at hot magenta</a>
+    <a href="06c-bruise.html"><iframe src="06c-bruise.html" tabindex="-1"></iframe><span>06c bruise</span> &mdash; islands, purple-dominant with crimson peaks</a>
+    <a href="06d-velvet.html"><iframe src="06d-velvet.html" tabindex="-1"></iframe><span>06d velvet</span> &mdash; islands, crimson and wine, larger shapes</a>
+    <a href="07b-haze.html"><iframe src="07b-haze.html" tabindex="-1"></iframe><span>07b haze</span> &mdash; drift with a slow violet back layer</a>
+    <a href="07c-undertow.html"><iframe src="07c-undertow.html" tabindex="-1"></iframe><span>07c undertow</span> &mdash; crimson smoke rising, breathing warp</a>
+  </div>
+  <h2>round 2 &mdash; palette only, layered noise, shader grain</h2>
+  <div class="grid">
+    <a href="05-silk.html"><iframe src="05-silk.html" tabindex="-1"></iframe><span>05 silk</span> &mdash; q &rarr; r &rarr; f warp, colour stacked per warp stage</a>
+    <a href="06-islands.html"><iframe src="06-islands.html" tabindex="-1"></iframe><span>06 islands</span> &mdash; nested fbm on slow sines, squared into islands</a>
+    <a href="07-drift.html"><iframe src="07-drift.html" tabindex="-1"></iframe><span>07 drift</span> &mdash; variable-strength cloud warp, sliding sideways</a>
+    <a href="08-strata.html"><iframe src="08-strata.html" tabindex="-1"></iframe><span>08 strata</span> &mdash; four parallax Perlin layers, each warped by the last</a>
+  </div>
+  <h2>round 1 &mdash; cover-based</h2>
+  <div class="grid">
+    <a href="01-css-haze.html"><iframe src="01-css-haze.html" tabindex="-1"></iframe><span>01 css haze</span> &mdash; gradients + displaced, blurred SVG fretboard</a>
+    <a href="02-warp.html"><iframe src="02-warp.html" tabindex="-1"></iframe><span>02 fbm warp</span> &mdash; domain-warped noise shader</a>
+    <a href="03-fretboard.html"><iframe src="03-fretboard.html" tabindex="-1"></iframe><span>03 fretboard ghost</span> &mdash; procedural neck, double exposure, directional smear</a>
+    <a href="04-feedback.html"><iframe src="04-feedback.html" tabindex="-1"></iframe><span>04 feedback smear</span> &mdash; ping-pong advection over curl noise</a>
+  </div>
+</body>
+</html>
