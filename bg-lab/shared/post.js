@@ -129,6 +129,8 @@ const COMPOSITE = /* glsl */ `
   uniform vec4 u_lens;
   uniform float u_lensRadius;
   uniform float u_lensAmt;
+  uniform float u_lensSoft;
+  uniform float u_lensWobble;
   uniform vec2 u_res;
   uniform float u_time;
   uniform float u_grain;
@@ -208,8 +210,9 @@ const COMPOSITE = /* glsl */ `
       vec2 halfSize = u_lens.zw * 0.5;
       float n1 = vnoise(frag * 0.008 + vec2(u_time * 0.04, -u_time * 0.03), 3.0);
       float n2 = vnoise(frag * 0.004 - vec2(u_time * 0.02, u_time * 0.025), 11.0);
-      float sd = sdRoundRect(frag - u_lens.xy - halfSize, halfSize, u_lensRadius) + (n1 - 0.5) * 48.0 + (n2 - 0.5) * 40.0;
-      float m = smoothstep(36.0, -36.0, sd) * u_lensAmt;
+      float sd = sdRoundRect(frag - u_lens.xy - halfSize, halfSize, u_lensRadius)
+               + ((n1 - 0.5) * 48.0 + (n2 - 0.5) * 40.0) * u_lensWobble;
+      float m = smoothstep(u_lensSoft, -u_lensSoft, sd) * u_lensAmt;
       vec3 inner = texture2D(u_soft, uv + (vec2(n1, n2) - 0.5) * 0.03).rgb;
       col = mix(col, inner * 0.5 + vec3(0.03, 0.0, 0.02), m);
     }
@@ -301,7 +304,7 @@ export function createPost(gl) {
   }
 
   // Run the chain on whatever was drawn into ensure()'s target, output to the canvas.
-  // lens (optional): { rect: [x, y, w, h] in canvas px from bottom-left, radius, amount }
+  // lens (optional): { rect: [x, y, w, h] in canvas px from bottom-left, radius, amount, soft, wobble }
   function run(s, time, cw, ch, lens = null) {
     const { w, h, bw, bh, sw, sh } = T;
 
@@ -332,6 +335,8 @@ export function createPost(gl) {
       u_lens: lens ? lens.rect : [0, 0, 0, 0],
       u_lensRadius: lens ? lens.radius : 0,
       u_lensAmt: lens ? lens.amount : 0,
+      u_lensSoft: lens ? lens.soft : 1,
+      u_lensWobble: lens ? lens.wobble : 0,
       u_res: [cw, ch],
       u_time: time,
       u_grain: s.grain,

@@ -20,7 +20,7 @@ export const POST = {
   halftoneSize: 3,
 };
 
-// lens: optional { el, radius, amount } - see runLayered
-export function startBackground(canvas, { lens } = {}) {
-  runLayered(canvas, islandsFrag(VELVET), { settings: POST, lens });
+// lens: optional { el, radius, ... }; pointer: mouse-follow strength - see runLayered
+export function startBackground(canvas, { lens, pointer } = {}) {
+  runLayered(canvas, islandsFrag(VELVET), { settings: POST, lens, pointer });
 }

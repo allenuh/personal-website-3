@@ -1,114 +1,33 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-halo>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>02 · bare</title>
   <link rel="stylesheet" href="layout.css">
+  <link rel="stylesheet" href="bare.css">
   <style>
     /* Minimal, no container at all: everything visible at once, set straight on the
        background. A soft dark halo (not a box) keeps the text legible. */
     .sheet {
-      position: relative;
       width: min(760px, 100%);
       max-height: 100%;
       overflow: auto;
       scrollbar-width: none;
-      text-shadow: 0 1px 14px rgba(12, 0, 6, 0.7);
-    }
-
-    .stage::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(ellipse 60% 55% at 50% 50%, rgba(10, 0, 6, 0.62), rgba(10, 0, 6, 0.25) 60%, transparent 85%);
-      pointer-events: none;
-    }
-
-    h1 {
-      font: 400 60px/1 var(--serif);
-      letter-spacing: -0.01em;
-    }
-
-    .lede {
-      max-width: 52ch;
-      margin-top: 14px;
-      color: var(--muted);
-      font-size: 15px;
-    }
-
-    .cols {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      margin-top: 40px;
-    }
-
-    h2 {
-      margin-bottom: 14px;
-      font: 500 11px/1 var(--mono);
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--faint);
-    }
-
-    .xp-head { display: block; }
-    .xp-org::before { content: "@ "; }
-    .xp-when { display: block; margin: 2px 0 0; }
-    .xp-what { font-size: 13px; }
-    .xp { gap: 16px; }
-    .proj { gap: 14px; }
-    .proj-what { font-size: 13px; }
-
-    .links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px 22px;
-      margin-top: 40px;
-      font: 12px var(--mono);
-    }
-
-    .links a { color: var(--muted); }
-    .links a:hover { color: var(--accent); }
-
-    @media (max-width: 640px) {
-      h1 { font-size: 44px; }
-      .cols { grid-template-columns: 1fr; gap: 28px; margin-top: 28px; }
     }
   </style>
 </head>
 <body>
   <canvas class="bg" aria-hidden="true"></canvas>
   <div class="stage">
-    <main class="sheet">
-      <header>
-        <h1>allen</h1>
-        <p class="lede" id="lede"></p>
-      </header>
-      <div class="cols">
-        <section>
-          <h2>experience</h2>
-          <div data-panel="experience"></div>
-        </section>
-        <section>
-          <h2>projects</h2>
-          <div id="projects"></div>
-        </section>
-      </div>
-      <footer class="links" id="links"></footer>
-    </main>
+    <main class="sheet bare"></main>
   </div>
 
   <script type="module">
     import { startBackground } from './bg.js';
-    import { fillPanels, projects } from './render.js';
-    import { PROFILE, CONTACT } from './content.js';
+    import { bare } from './render.js';
 
-    fillPanels();
-    document.getElementById('lede').textContent =
-      `${PROFILE.role} at ${PROFILE.school}. ${PROFILE.intro[1]}`;
-    document.getElementById('projects').innerHTML = projects({ tags: false });
-    document.getElementById('links').innerHTML = CONTACT.map((c) => `<a href="${c.href}">${c.label}</a>`).join('');
+    document.querySelector('.sheet').innerHTML = bare();
     startBackground(document.querySelector('canvas'));
   </script>
   <script type="module" src="nav.js"></script>

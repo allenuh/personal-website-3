@@ -37,6 +37,24 @@ export const contact = () => `
 
 export const sections = { about, experience, projects, contact };
 
+// 02's everything-at-once composition (style with bare.css)
+export const bare = () => `
+  <header>
+    <h1>${PROFILE.name}</h1>
+    <p class="lede">${PROFILE.role} at ${PROFILE.school}. ${PROFILE.intro[1]}</p>
+  </header>
+  <div class="cols">
+    <section>
+      <h2>experience</h2>
+      ${experience()}
+    </section>
+    <section>
+      <h2>projects</h2>
+      ${projects({ tags: false })}
+    </section>
+  </div>
+  <footer class="links">${CONTACT.map((c) => `<a href="${c.href}">${c.label}</a>`).join('')}</footer>`;
+
 // Fill every [data-panel] inside root with its section.
 export function fillPanels(root = document) {
   root.querySelectorAll('[data-panel]').forEach((p) => (p.innerHTML = sections[p.dataset.panel]()));
