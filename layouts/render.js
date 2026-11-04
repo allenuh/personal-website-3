@@ -1,9 +1,12 @@
 // Section markup from content.js. Layouts drop these into their own structure and restyle them.
 import { PROFILE, EXPERIENCE, PROJECTS, CONTACT } from './content.js';
 
+const studies = `${PROFILE.major} @ ${PROFILE.school}`;
+
 export const about = ({ meta = true } = {}) => `
   <div class="about">
-    ${PROFILE.intro.map((p) => `<p>${p}</p>`).join('')}
+    <p>${studies}</p>
+    <p>${PROFILE.intro}</p>
     ${meta ? `<p class="about-meta">${PROFILE.location} &middot; ${PROFILE.status}</p>` : ''}
   </div>`;
 
@@ -20,13 +23,13 @@ export const experience = () => `
       </li>`).join('')}
   </ol>`;
 
-export const projects = ({ tags = true } = {}) => `
+export const projects = () => `
   <ul class="proj">
     ${PROJECTS.map((p) => `
       <li>
         <a class="proj-name" href="${p.href}">${p.name} <span aria-hidden="true">&#8599;</span></a>
+        <ul class="tags">${p.tech.map((t) => `<li>${t}</li>`).join('')}</ul>
         <p class="proj-what">${p.what}</p>
-        ${tags ? `<ul class="tags">${p.tech.map((t) => `<li>${t}</li>`).join('')}</ul>` : ''}
       </li>`).join('')}
   </ul>`;
 
@@ -41,16 +44,17 @@ export const sections = { about, experience, projects, contact };
 export const bare = () => `
   <header>
     <h1>${PROFILE.name}</h1>
-    <p class="lede">${PROFILE.role} at ${PROFILE.school}. ${PROFILE.intro[1]}</p>
+    <p class="studies">${studies}</p>
+    <p class="lede">${PROFILE.intro}</p>
   </header>
   <div class="cols">
     <section>
-      <h2>experience</h2>
+      <h2>Experience</h2>
       ${experience()}
     </section>
     <section>
-      <h2>projects</h2>
-      ${projects({ tags: false })}
+      <h2>Projects</h2>
+      ${projects()}
     </section>
   </div>
   <footer class="links">${CONTACT.map((c) => `<a href="${c.href}">${c.label}</a>`).join('')}</footer>`;

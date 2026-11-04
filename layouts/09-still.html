@@ -21,11 +21,15 @@
     }
 
     .still {
-      width: min(856px, 100%);
+      width: min(728px, 100%);
       max-height: 100%;
       overflow: auto;
       scrollbar-width: none;
       padding: 44px 48px;
+    }
+
+    .bare .lede {
+      max-width: 60ch;
     }
 
     /* halo: the name is in Kabel */
@@ -76,7 +80,6 @@
 
     const main = document.querySelector('.still');
     main.innerHTML = bare();
-    main.querySelector('h1').textContent = 'allen liu';
     startBackground(document.querySelector('canvas'), { lens: { el: main, radius: 48, grow: 0.03 }, pointer: 0.75 });
   </script>
   <script type="module" src="nav.js"></script>
