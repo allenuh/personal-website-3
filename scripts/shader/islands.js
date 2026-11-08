@@ -18,7 +18,6 @@ export function islandsFrag({ stops, scale = 1, speed = 1, breathe = 0, gamma = 
     precision highp float;
     uniform vec2 u_res;
     uniform float u_time;
-    uniform vec2 u_mouse;
     ${NOISE}
     ${PERLIN}
     ${fbmFn('islandFbm', { octaves: 8, lacunarity: 1.9, gain: 0.6 })}
@@ -34,7 +33,7 @@ export function islandsFrag({ stops, scale = 1, speed = 1, breathe = 0, gamma = 
       float t = u_time * ${f(speed)};
       vec2 c = (gl_FragCoord.xy - 0.5 * u_res) / u_res.y;
       c *= ${f(scale)} * (1.0 + ${f(breathe)} * sin(t * 0.11));
-      vec2 p = c + vec2(0.5 * u_res.x / u_res.y, 0.5) + (u_mouse - 0.5) * 0.08;
+      vec2 p = c + vec2(0.5 * u_res.x / u_res.y, 0.5);
 
       vec3 col = ramp(pow(pattern(p, t), ${f(gamma)}) * 1.05);
 

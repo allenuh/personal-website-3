@@ -3,7 +3,7 @@
 //   scene (low res) -> afterimage/melt (feedback) -> directional blur -> bloom (half of that, 2x H+V gaussian)
 //   -> composite at full res: pixelate, colour bleed, bloom, halftone, vignette, posterize/dither, film grain
 //
-// Every knob lives in CONTROLS so the panel and the defaults come from one list.
+// Every knob lives in CONTROLS (with the ranges used while tuning); DEFAULTS comes from it.
 
 import { program, renderTarget } from './gl.js';
 

@@ -81,35 +81,3 @@ float ${name}(vec2 p) {
   return v;
 }
 `;
-
-// Named swatches from the cover, for layering (purple included for the shadows).
-export const SWATCHES = /* glsl */ `
-const vec3 INK   = vec3(0.06, 0.0, 0.045);
-const vec3 PLUM  = vec3(0.26, 0.03, 0.24);
-const vec3 WINE  = vec3(0.44, 0.02, 0.16);
-const vec3 RED   = vec3(0.80, 0.05, 0.24);
-const vec3 MAG   = vec3(0.91, 0.10, 0.50);
-const vec3 PINK  = vec3(1.0, 0.45, 0.75);
-const vec3 BLUSH = vec3(1.0, 0.76, 0.89);
-`;
-
-// Gradient sampled from the Loveless cover: near-black wine -> crimson -> magenta -> pale pink.
-export const PALETTE = /* glsl */ `
-vec3 loveless(float t) {
-  t = clamp(t, 0.0, 1.0);
-  vec3 c0 = vec3(0.035, 0.0, 0.02);
-  vec3 c1 = vec3(0.30, 0.01, 0.13);
-  vec3 c2 = vec3(0.72, 0.03, 0.33);
-  vec3 c3 = vec3(0.93, 0.12, 0.52);
-  vec3 c4 = vec3(1.0, 0.55, 0.80);
-  vec3 c = mix(c0, c1, smoothstep(0.0, 0.25, t));
-  c = mix(c, c2, smoothstep(0.25, 0.5, t));
-  c = mix(c, c3, smoothstep(0.5, 0.75, t));
-  c = mix(c, c4, smoothstep(0.75, 1.0, t));
-  return c;
-}
-
-vec3 screen(vec3 a, vec3 b) {
-  return 1.0 - (1.0 - a) * (1.0 - b);
-}
-`;

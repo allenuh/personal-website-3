@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>allen liu</title>
+  <meta name="description" content="Allen Liu, Computer Science @ Queen's University.">
+  <meta name="theme-color" content="#200008">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Oranienbaum&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas class="bg" aria-hidden="true"></canvas>
+  <div class="stage">
+    <main class="still"></main>
+  </div>
+
+  <script type="module">
+    import { startBackground } from './scripts/background.js';
+    import { page } from './scripts/render.js';
+
+    const main = document.querySelector('.still');
+    main.innerHTML = page();
+    startBackground(document.querySelector('canvas'), { lens: { el: main, radius: 48, grow: 0.03 } });
+  </script>
+</body>
+</html>

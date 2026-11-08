@@ -46,21 +46,6 @@ export function fullscreenTriangle(gl) {
   gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
 }
 
-// eased pointer position in 0..1 (y up), for subtle parallax
-export function trackPointer() {
-  const target = [0.5, 0.5];
-  const value = [0.5, 0.5];
-  addEventListener('pointermove', (e) => {
-    target[0] = e.clientX / innerWidth;
-    target[1] = 1 - e.clientY / innerHeight;
-  });
-  return () => {
-    value[0] += (target[0] - value[0]) * 0.03;
-    value[1] += (target[1] - value[1]) * 0.03;
-    return value;
-  };
-}
-
 // Size the canvas backing store to a fraction of the viewport. Returns true if it changed.
 export function fit(canvas, scale) {
   const w = Math.max(1, Math.round(innerWidth * scale));
@@ -84,28 +69,4 @@ export function renderTarget(gl, w, h) {
   gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
   gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, tex, 0);
   return { tex, fb, w, h };
-}
-
-// Run a single-pass fragment shader with u_res / u_time / u_mouse.
-export function runShader(canvas, frag, { scale = 0.5, seed = 40 } = {}) {
-  const gl = getGL(canvas);
-  if (!gl) return;
-  const { prog, u } = program(gl, frag);
-  gl.useProgram(prog);
-  fullscreenTriangle(gl);
-  const pointer = trackPointer();
-  const start = performance.now();
-
-  function frame(now) {
-    fit(canvas, scale);
-    gl.viewport(0, 0, canvas.width, canvas.height);
-    const m = pointer();
-    gl.uniform2f(u.u_res, canvas.width, canvas.height);
-    gl.uniform1f(u.u_time, seed + (now - start) / 1000);
-    gl.uniform2f(u.u_mouse, m[0], m[1]);
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
-    if (!reducedMotion) requestAnimationFrame(frame);
-  }
-  requestAnimationFrame(frame);
-  if (reducedMotion) addEventListener('resize', () => requestAnimationFrame(frame));
 }

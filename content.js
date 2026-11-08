@@ -43,5 +43,3 @@ export const CONTACT = [
   { label: 'linkedin', value: 'linkedin.com/in/allen-ziyi-liu', href: 'https://www.linkedin.com/in/allen-ziyi-liu/' },
   { label: 'resume', value: 'resume.pdf', href: '#' },
 ];
-
-export const SECTIONS = ['about', 'experience', 'projects', 'contact'];

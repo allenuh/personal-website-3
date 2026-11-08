@@ -1,0 +1,232 @@
+/* Fonts: Instrument Serif (name), Oranienbaum (major/school and section headers),
+   Geist (text), Geist Mono (dates and tech), Kabel (contact links). Google fonts load in index.html. */
+
+/* Kabel Book (freeware cut by A. Carr / Fantazia) */
+@font-face {
+  font-family: "Kabel";
+  src: url("fonts/kabel.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: dark;
+  --ink: #ffe6f2;
+  --muted: rgba(255, 214, 234, 0.66);
+  --faint: rgba(255, 214, 234, 0.4);
+  --accent: #ff6cb5;
+  --sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --serif: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --label: "Oranienbaum", var(--serif); /* the major/school line */
+  --heading: "Oranienbaum", var(--serif); /* section headers */
+  /* keep content well clear of the screen edges */
+  --edge: clamp(16px, 6vmin, 88px);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: #200008;
+  color: var(--ink);
+  font: 14px/1.55 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  overflow: hidden;
+}
+
+/* the shader background; the blurred window behind the card is drawn there too (scripts/background.js) */
+.bg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+}
+
+.stage {
+  position: fixed;
+  inset: 0;
+  padding: var(--edge);
+  display: grid;
+  place-items: center;
+}
+
+a {
+  color: inherit;
+  text-decoration-color: var(--faint);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--accent);
+  text-decoration-color: currentColor;
+}
+
+:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 3px;
+}
+
+p,
+ul,
+ol,
+h1,
+h2 {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+.still {
+  width: min(728px, 100%);
+  max-height: 100%;
+  overflow: auto;
+  scrollbar-width: none;
+  padding: 44px 48px;
+}
+
+h1 {
+  font: 400 60px/1 var(--serif);
+  letter-spacing: -0.01em;
+}
+
+.studies {
+  margin-top: 8px;
+  font: 400 17px/1.25 var(--label);
+  color: var(--muted);
+}
+
+.lede {
+  max-width: 60ch;
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 40px;
+}
+
+h2 {
+  margin-bottom: 12px;
+  font: 400 17px/1 var(--heading);
+  color: var(--muted);
+}
+
+/* experience */
+.xp {
+  display: grid;
+  gap: 16px;
+}
+
+.xp-org {
+  display: block;
+  color: var(--muted);
+}
+
+.xp-org::before {
+  content: "@ ";
+}
+
+.xp-when {
+  display: block;
+  margin-top: 2px;
+  color: var(--faint);
+  font: 12px var(--mono);
+  white-space: nowrap;
+}
+
+.xp-what,
+.proj-what {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* projects */
+.proj {
+  display: grid;
+  gap: 14px;
+}
+
+.proj-name {
+  text-decoration: none;
+}
+
+.proj-name span {
+  color: var(--faint);
+  font-size: 0.85em;
+}
+
+/* tech as a quiet line of words */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 8px;
+  margin-top: 4px;
+}
+
+.tags li {
+  font: 11px/1.5 var(--mono);
+  color: var(--faint);
+}
+
+/* contact links */
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 22px;
+  margin-top: 40px;
+  font: 13px "Kabel", "Futura", "Century Gothic", sans-serif;
+}
+
+.links a {
+  color: #ad0040;
+  text-decoration: none;
+}
+
+.links a:hover {
+  color: #e3248c;
+}
+
+/* short laptop screens: tighten the vertical rhythm so everything still fits */
+@media (max-height: 760px) and (min-width: 641px) {
+  .still { padding: 26px 48px; }
+  h1 { font-size: 50px; }
+  .studies { margin-top: 6px; }
+  .lede { margin-top: 10px; }
+  .cols { margin-top: 28px; }
+  .xp { gap: 12px; }
+  .proj { gap: 10px; }
+  .links { margin-top: 28px; }
+}
+
+/* phones: one column, and the card scrolls inside the screen with a faded bottom edge */
+@media (max-width: 640px) {
+  body { font-size: 13px; }
+  h1 { font-size: 44px; }
+  .cols { grid-template-columns: 1fr; gap: 28px; margin-top: 28px; }
+
+  .still {
+    padding: 32px 20px 28px;
+    -webkit-mask-image: linear-gradient(to bottom, #000 92%, transparent);
+    mask-image: linear-gradient(to bottom, #000 92%, transparent);
+  }
+}
