@@ -27,14 +27,14 @@ export const PROJECTS = [
     name: 'midnight-masquerade',
     what: '5-player browser-based party game built on an authoritative Node.js server.',
     tech: ['TypeScript', 'three.js', 'Node.js', 'GLSL', 'WebSockets'],
-    href: '#',
+    href: 'https://github.com/allenuh/midnight-masquerade',
   },
-  // {
-  //   name: 'tbd',
-  //   what: 'tbd',
-  //   tech: ['tbd', 'tbd', 'tbd'],
-  //   href: '#',
-  // },
+  {
+    name: 'shrike',
+    what: 'AI-powered DevOps platform for automated code review and GitHub integration.',
+    tech: ['Python', 'AWS', 'Docker', 'Next.js', 'OpenAI API'],
+    href: 'https://github.com/allenuh/shrike',
+  },
 ];
 
 export const CONTACT = [

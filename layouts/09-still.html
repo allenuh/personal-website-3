@@ -41,7 +41,7 @@
 
     /* lens: the name keeps 02's serif and the contact links are in Kabel instead */
     html:not([data-halo]) .bare .links {
-      font: 12px "Kabel", "Futura", "Century Gothic", sans-serif;
+      font: 13px "Kabel", "Futura", "Century Gothic", sans-serif;
     }
 
     html:not([data-halo]) .bare .links a {
@@ -80,7 +80,7 @@
 
     const main = document.querySelector('.still');
     main.innerHTML = bare();
-    startBackground(document.querySelector('canvas'), { lens: { el: main, radius: 48, grow: 0.03 }, pointer: 0.75 });
+    startBackground(document.querySelector('canvas'), { lens: { el: main, radius: 48, grow: 0.03 }, pointer: 0 });
   </script>
   <script type="module" src="nav.js"></script>
 </body>
