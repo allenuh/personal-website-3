@@ -4,7 +4,7 @@ export const PROFILE = {
   school: 'Queen\'s University',
   location: 'Toronto, ON',
   status: 'looking for summer 2027 internships',
-  intro: 'I enjoy building software, problem solving, and learning by doing. I also like to go on walks, play volleyball, and I\'ll always try to make time to explore my creative interests.',
+  intro: 'I enjoy building software, problem solving, and learning by doing. I also like going on walks, playing volleyball, and I\'ll always try to make time to explore my creative interests.',
 };
 
 export const EXPERIENCE = [
@@ -25,13 +25,13 @@ export const EXPERIENCE = [
 export const PROJECTS = [
   {
     name: 'midnight-masquerade',
-    what: '5-player browser-based party game built on an authoritative Node.js server.',
+    what: 'Asymmetrical online multiplayer browser game built on an authoritative Node.js server.',
     tech: ['TypeScript', 'three.js', 'Node.js', 'GLSL', 'WebSockets'],
     href: 'https://github.com/allenuh/midnight-masquerade',
   },
   {
     name: 'shrike',
-    what: 'AI-powered DevOps platform for automated code review and GitHub integration.',
+    what: 'AI-powered DevOps platform for automated code review with GitHub integration.',
     tech: ['Python', 'AWS', 'Docker', 'Next.js', 'OpenAI API'],
     href: 'https://github.com/allenuh/shrike',
   },

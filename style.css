@@ -111,17 +111,17 @@ h1 {
 }
 
 .lede {
-  max-width: 60ch;
-  margin-top: 14px;
+  max-width: 65ch;
+  margin-top: 8px;
   color: var(--muted);
-  font-size: 15px;
+  font-size: 13px;
 }
 
 .cols {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 40px;
-  margin-top: 40px;
+  margin-top: 30px;
 }
 
 h2 {
