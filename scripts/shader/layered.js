@@ -3,7 +3,6 @@
 //
 // Options:
 //   settings - post settings, merged over post.js DEFAULTS
-//   uniforms - extra scene uniforms, read every frame (so they can be changed live)
 //   lens     - { el, radius = 24, amount = 1, soft = 36, wobble = 1 }: melt a blurred, darker
 //              window into the background behind `el`, tracked every frame. soft is the edge
 //              fade in px; wobble scales the noise pushing the edge around (0 = exact box).
@@ -15,9 +14,9 @@
 import { getGL, program, fullscreenTriangle, reducedMotion } from './gl.js';
 import { createPost, DEFAULTS } from './post.js';
 
-export function runLayered(canvas, frag, { scale = 0.5, maxWidth = 1280, seed = 40, settings: custom = {}, lens = null, uniforms = {} } = {}) {
+export function runLayered(canvas, frag, { scale = 0.5, maxWidth = 1280, seed = 40, settings: custom = {}, lens = null } = {}) {
   const gl = getGL(canvas);
-  if (!gl) return null;
+  if (!gl) return;
   const scene = program(gl, frag);
   fullscreenTriangle(gl);
   const post = createPost(gl);
@@ -71,14 +70,11 @@ export function runLayered(canvas, frag, { scale = 0.5, maxWidth = 1280, seed = 
     const target = post.ensure(w, h);
     const t = seed + (now - start) / 1000;
 
-    post.draw(scene, target, w, h, {}, { u_res: [w, h], u_time: t, ...uniforms });
+    post.draw(scene, target, w, h, {}, { u_res: [w, h], u_time: t });
     post.run(settings, t, canvas.width, canvas.height, lensUniforms(cssH), dpr);
 
     if (!reducedMotion) requestAnimationFrame(frame);
   }
   redraw();
   if (reducedMotion) addEventListener('resize', redraw);
-
-  // live handle: change settings / uniforms, then refresh() redraws a still (reduced-motion) frame
-  return { settings, uniforms, refresh: () => reducedMotion && redraw() };
 }

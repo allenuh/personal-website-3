@@ -26,10 +26,7 @@
 
     const main = document.querySelector('.still');
     main.innerHTML = page();
-    // ?tune in the URL shows sliders for the magenta peaks (scripts/tune.js); visitors never see them
-    const tune = new URLSearchParams(location.search).has('tune');
-    const bg = startBackground(document.querySelector('canvas'), { lens: { el: main, radius: 48, grow: 0.03 }, tune });
-    if (tune) import('./scripts/tune.js').then(({ tunePanel }) => tunePanel(bg));
+    startBackground(document.querySelector('canvas'), { lens: { el: main, radius: 48, grow: 0.03 } });
   </script>
 </body>
 </html>

@@ -2,8 +2,9 @@
 import { runLayered } from './shader/layered.js';
 import { islandsFrag } from './shader/islands.js';
 
-// Islands in crimson: oxblood/wine body, pink-red mid-tones, magenta-violet peaks.
+// Islands in crimson: oxblood/wine body, pink-red mid-tones, magenta peaks with light pink cores.
 // drift and breathe at 0 hold the pattern in place, so it morphs without panning or zooming.
+// (the pattern value sits mostly between 0.3 and 0.6; about 6% goes above 0.65, almost none above 0.8)
 const SCENE = {
   stops: [
     [0.06, 0.0, 0.03],
@@ -11,7 +12,8 @@ const SCENE = {
     [0.22, 0.38, [0.45, 0.02, 0.19]],
     [0.38, 0.55, [0.74, 0.03, 0.22]],
     [0.55, 0.72, [0.86, 0.06, 0.38]],
-    [0.55, 0.75, [0.70, 0.06, 0.60]], // magenta peaks: was 0.72-0.95, which the field barely reaches
+    [0.55, 0.75, [0.82, 0.06, 0.62]], // magenta
+    [0.78, 0.80, [0.75, 0.31, 0.60]], // light pink #c0509a, only at the very brightest peaks
   ],
   scale: 0.75,
   breathe: 0,
@@ -34,15 +36,12 @@ export const POST = {
   pixel: 1,
   posterize: 0.76,
   dither: 0.86,
-  linearDither: 0.8, // the deeper crimson look (see post.js)
+  linearDither: 0.6, // the deeper crimson look (see post.js)
   halftone: 0,
   halftoneSize: 3,
 };
 
 // lens: optional { el, radius, ... } - see runLayered
-// tune: make the magenta stop live-adjustable (?tune, scripts/tune.js); returns a live handle
-export function startBackground(canvas, { lens, tune = false } = {}) {
-  const [lo, hi, color] = SCENE.stops.at(-1);
-  const uniforms = tune ? { u_peakLo: lo, u_peakHi: hi, u_peakColor: [...color] } : {};
-  return runLayered(canvas, islandsFrag({ ...SCENE, livePeak: tune }), { settings: POST, lens, uniforms });
+export function startBackground(canvas, { lens } = {}) {
+  runLayered(canvas, islandsFrag(SCENE), { settings: POST, lens });
 }
