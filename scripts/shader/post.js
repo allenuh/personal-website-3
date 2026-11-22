@@ -23,6 +23,9 @@ export const CONTROLS = [
   { group: 'retro', key: 'pixel', label: 'pixelate', min: 1, max: 32, step: 1, value: 1, fmt: (v) => (v === 1 ? 'off' : `${v}px`) },
   { group: 'retro', key: 'posterize', label: 'posterize', min: 0, max: 1, step: 0.01, value: 0, fmt: (v, s) => (levelsFor(s) ? `${levelsFor(s)} lv` : 'off') },
   { group: 'retro', key: 'dither', label: 'dither', min: 0, max: 1, step: 0.01, value: 0 },
+  // 0: dither in gamma (sRGB) space, which the eye averages brighter, lifting the faint blue toward
+  // pink-purple. 1: dither so the light average matches the image, a deeper crimson. In between mixes.
+  { group: 'retro', key: 'linearDither', label: 'linear dither', min: 0, max: 1, step: 0.01, value: 0 },
   { group: 'retro', key: 'halftone', label: 'halftone', min: 0, max: 1, step: 0.01, value: 0 },
   { group: 'retro', key: 'halftoneSize', label: 'dot size', min: 3, max: 24, step: 0.5, value: 8, fmt: (v) => `${v}px` },
 ];
@@ -141,6 +144,8 @@ const COMPOSITE = /* glsl */ `
   uniform float u_pixel;
   uniform float u_levels;
   uniform float u_dither;
+  uniform float u_linearDither;
+  uniform float u_dpr;
   uniform float u_halftone;
   uniform float u_htSize;
   ${HASH}
@@ -198,8 +203,12 @@ const COMPOSITE = /* glsl */ `
     return smoothstep(r + aa, r - aa, d);
   }
 
+  vec3 toLinear(vec3 c) { return pow(c, vec3(2.2)); }
+
   void main() {
     vec2 frag = gl_FragCoord.xy;
+    // CSS px: the lens and grain are sized in these so they look the same at any zoom or display scale
+    vec2 css = frag / u_dpr;
     vec2 cell = (floor(frag / u_pixel) + 0.5) * u_pixel;
     vec2 uv = cell / u_res;
     vec3 col = sampleImg(uv);
@@ -208,9 +217,9 @@ const COMPOSITE = /* glsl */ `
     // rect whose edge is pushed around by slow noise so it melts instead of cutting
     if (u_lensAmt > 0.0) {
       vec2 halfSize = u_lens.zw * 0.5;
-      float n1 = vnoise(frag * 0.008 + vec2(u_time * 0.04, -u_time * 0.03), 3.0);
-      float n2 = vnoise(frag * 0.004 - vec2(u_time * 0.02, u_time * 0.025), 11.0);
-      float sd = sdRoundRect(frag - u_lens.xy - halfSize, halfSize, u_lensRadius)
+      float n1 = vnoise(css * 0.008 + vec2(u_time * 0.04, -u_time * 0.03), 3.0);
+      float n2 = vnoise(css * 0.004 - vec2(u_time * 0.02, u_time * 0.025), 11.0);
+      float sd = sdRoundRect(css - u_lens.xy - halfSize, halfSize, u_lensRadius)
                + ((n1 - 0.5) * 48.0 + (n2 - 0.5) * 40.0) * u_lensWobble;
       float m = smoothstep(u_lensSoft, -u_lensSoft, sd) * u_lensAmt;
       vec3 inner = texture2D(u_soft, uv + (vec2(n1, n2) - 0.5) * 0.03).rgb;
@@ -230,15 +239,25 @@ const COMPOSITE = /* glsl */ `
     vec2 d = (frag / u_res - 0.5) * vec2(u_res.x / u_res.y, 1.0);
     col *= 1.0 - u_vignette * dot(d, d);
 
+    // posterize: step up a level where this pixel's (dithered) threshold is under the fraction of
+    // the way to the next level - measured in gamma, or in light for linear dither
     if (u_levels > 0.5) {
       float l = u_levels - 1.0;
       float b = (bayer8(floor(frag / u_pixel)) - 0.5) * u_dither;
-      col = floor(col * l + 0.5 + b) / l;
+      col = clamp(col, 0.0, 1.0);
+      vec3 lo = floor(col * l);
+      vec3 f = col * l - lo;
+      if (u_linearDither > 0.0) {
+        vec3 a = toLinear(lo / l);
+        vec3 fl = (toLinear(col) - a) / max(toLinear(min(lo + 1.0, l) / l) - a, 1e-5);
+        f = mix(f, fl, u_linearDither);
+      }
+      col = (lo + step(0.5 - b, f)) / l;
     }
 
     // film grain: value noise on a grid of u_grainSize px, re-rolled at 24fps
     float frame = mod(floor(u_time * 24.0), 113.0);
-    float g = vnoise(frag / u_grainSize - 0.5, frame) - 0.5;
+    float g = vnoise(css / u_grainSize - 0.5, frame) - 0.5;
     g *= mix(1.0, 1.7, clamp(u_grainSize - 1.0, 0.0, 1.0));
     float luma = dot(col, vec3(0.299, 0.587, 0.114));
     // like film, grain reads strongest in the midtones
@@ -304,8 +323,9 @@ export function createPost(gl) {
   }
 
   // Run the chain on whatever was drawn into ensure()'s target, output to the canvas.
-  // lens (optional): { rect: [x, y, w, h] in canvas px from bottom-left, radius, amount, soft, wobble }
-  function run(s, time, cw, ch, lens = null) {
+  // lens (optional): { rect: [x, y, w, h] in CSS px from bottom-left, radius, amount, soft, wobble }
+  // dpr: device px per CSS px of the canvas (lens rect, radius and grain size are in CSS px)
+  function run(s, time, cw, ch, lens = null, dpr = 1) {
     const { w, h, bw, bh, sw, sh } = T;
 
     draw(P.after, T.b, w, h, { u_new: T.scene, u_old: T.a }, {
@@ -347,6 +367,8 @@ export function createPost(gl) {
       u_pixel: s.pixel,
       u_levels: levelsFor(s),
       u_dither: s.dither,
+      u_linearDither: s.linearDither,
+      u_dpr: dpr,
       u_halftone: s.halftone,
       u_htSize: s.halftoneSize,
     });

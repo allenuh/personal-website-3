@@ -34,6 +34,7 @@ export const POST = {
   pixel: 1,
   posterize: 0.76,
   dither: 0.86,
+  linearDither: 0.8, // the deeper crimson look (see post.js)
   halftone: 0,
   halftoneSize: 3,
 };

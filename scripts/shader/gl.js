@@ -46,16 +46,6 @@ export function fullscreenTriangle(gl) {
   gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
 }
 
-// Size the canvas backing store to a fraction of the viewport. Returns true if it changed.
-export function fit(canvas, scale) {
-  const w = Math.max(1, Math.round(innerWidth * scale));
-  const h = Math.max(1, Math.round(innerHeight * scale));
-  if (canvas.width === w && canvas.height === h) return false;
-  canvas.width = w;
-  canvas.height = h;
-  return true;
-}
-
 // RGBA8 texture + framebuffer, linear filtered, clamped (fine for NPOT sizes)
 export function renderTarget(gl, w, h) {
   const tex = gl.createTexture();
