@@ -5,15 +5,19 @@
 import { NOISE, PERLIN, fbmFn, glslFloat as f, glslVec3 as vec3 } from './glsl.js';
 
 // stops: [baseColour, [lo, hi, colour], ...] - each stop fades in over lo..hi of the pattern value
-const ramp = ([base, ...stops]) => /* glsl */ `
+// livePeak: the last stop reads u_peakLo / u_peakHi / u_peakColor instead, so it can be tuned live
+const ramp = ([base, ...stops], livePeak) => /* glsl */ `
+  ${livePeak ? 'uniform float u_peakLo; uniform float u_peakHi; uniform vec3 u_peakColor;' : ''}
   vec3 ramp(float v) {
     vec3 c = ${vec3(base)};
-    ${stops.map(([lo, hi, col]) => `c = mix(c, ${vec3(col)}, smoothstep(${f(lo)}, ${f(hi)}, v));`).join('\n    ')}
+    ${stops.map(([lo, hi, col], i) => (livePeak && i === stops.length - 1
+      ? 'c = mix(c, u_peakColor, smoothstep(u_peakLo, u_peakHi, v));'
+      : `c = mix(c, ${vec3(col)}, smoothstep(${f(lo)}, ${f(hi)}, v));`)).join('\n    ')}
     return c;
   }
 `;
 
-export function islandsFrag({ stops, scale = 1, speed = 1, breathe = 0, gamma = 2, shadow = 0, shadowTint = [0.3, 0.05, 0.35], drift = 1 }) {
+export function islandsFrag({ stops, scale = 1, speed = 1, breathe = 0, gamma = 2, shadow = 0, shadowTint = [0.3, 0.05, 0.35], drift = 1, livePeak = false }) {
   return /* glsl */ `
     precision highp float;
     uniform vec2 u_res;
@@ -21,7 +25,7 @@ export function islandsFrag({ stops, scale = 1, speed = 1, breathe = 0, gamma = 
     ${NOISE}
     ${PERLIN}
     ${fbmFn('islandFbm', { octaves: 8, lacunarity: 1.9, gain: 0.6 })}
-    ${ramp(stops)}
+    ${ramp(stops, livePeak)}
 
     float pattern(vec2 p, float t) {
       float a = islandFbm(p * 3.0 + vec2(sin(t * 0.021), sin(t * 0.034)) * 3.0);

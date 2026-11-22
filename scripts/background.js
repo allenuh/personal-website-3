@@ -11,7 +11,7 @@ const SCENE = {
     [0.22, 0.38, [0.45, 0.02, 0.19]],
     [0.38, 0.55, [0.74, 0.03, 0.22]],
     [0.55, 0.72, [0.86, 0.06, 0.38]],
-    [0.72, 0.95, [0.70, 0.06, 0.60]],
+    [0.55, 0.75, [0.70, 0.06, 0.60]], // magenta peaks: was 0.72-0.95, which the field barely reaches
   ],
   scale: 0.75,
   breathe: 0,
@@ -40,6 +40,9 @@ export const POST = {
 };
 
 // lens: optional { el, radius, ... } - see runLayered
-export function startBackground(canvas, { lens } = {}) {
-  runLayered(canvas, islandsFrag(SCENE), { settings: POST, lens });
+// tune: make the magenta stop live-adjustable (?tune, scripts/tune.js); returns a live handle
+export function startBackground(canvas, { lens, tune = false } = {}) {
+  const [lo, hi, color] = SCENE.stops.at(-1);
+  const uniforms = tune ? { u_peakLo: lo, u_peakHi: hi, u_peakColor: [...color] } : {};
+  return runLayered(canvas, islandsFrag({ ...SCENE, livePeak: tune }), { settings: POST, lens, uniforms });
 }
