@@ -147,7 +147,7 @@ h2 {
 .xp-when {
   display: block;
   margin-top: 2px;
-  color: var(--faint);
+  color: #e3248c; /* the contact links' hover pink */
   font: 12px/1.4 var(--sans);
   letter-spacing: 0.01em;
   white-space: nowrap;
@@ -186,7 +186,7 @@ h2 {
 .tags li {
   font: 11.5px/1.5 var(--sans);
   letter-spacing: 0.01em;
-  color: var(--faint);
+  color: #e3248c;
 }
 
 /* contact links */
