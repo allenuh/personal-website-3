@@ -1,5 +1,5 @@
 /* Fonts: Instrument Serif (name), Oranienbaum (major/school and section headers),
-   Geist (text), Geist Mono (dates and tech), Kabel (contact links). Google fonts load in index.html. */
+   Geist (text, dates and tech), Kabel (contact links). Google fonts load in index.html. */
 
 /* Kabel Book (freeware cut by A. Carr / Fantazia) */
 @font-face {
@@ -16,7 +16,6 @@
   --faint: rgba(255, 214, 234, 0.4);
   --accent: #ff6cb5;
   --sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
   --serif: "Instrument Serif", "Iowan Old Style", Georgia, serif;
   --label: "Oranienbaum", var(--serif); /* the major/school line */
   --heading: "Oranienbaum", var(--serif); /* section headers */
@@ -149,7 +148,8 @@ h2 {
   display: block;
   margin-top: 2px;
   color: var(--faint);
-  font: 12px var(--mono);
+  font: 12px/1.4 var(--sans);
+  letter-spacing: 0.01em;
   white-space: nowrap;
 }
 
@@ -184,7 +184,8 @@ h2 {
 }
 
 .tags li {
-  font: 11px/1.5 var(--mono);
+  font: 11.5px/1.5 var(--sans);
+  letter-spacing: 0.01em;
   color: var(--faint);
 }
 
