@@ -12,7 +12,7 @@ const SCENE = {
     [0.22, 0.38, [0.45, 0.02, 0.19]],
     [0.38, 0.55, [0.74, 0.03, 0.22]],
     [0.55, 0.72, [0.86, 0.06, 0.38]],
-    [0.55, 0.75, [0.82, 0.06, 0.62]], // magenta
+    [0.55, 0.75, [0.74, 0.06, 0.62]], // magenta
     [0.78, 0.80, [0.75, 0.31, 0.60]], // light pink #c0509a, only at the very brightest peaks
   ],
   scale: 0.75,
@@ -36,7 +36,7 @@ export const POST = {
   pixel: 1,
   posterize: 0.76,
   dither: 0.86,
-  linearDither: 0.6, // the deeper crimson look (see post.js)
+  linearDither: 0.75, // the deeper crimson look (see post.js)
   halftone: 0,
   halftoneSize: 3,
 };
